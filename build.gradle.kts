@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
+
 plugins {
     kotlin("jvm") version "1.6.0"
 }
@@ -10,6 +12,12 @@ tasks {
     sourceSets {
         main {
             java.srcDirs("src")
+        }
+    }
+
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "17"
         }
     }
 

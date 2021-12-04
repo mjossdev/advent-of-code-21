@@ -7,6 +7,8 @@ import java.security.MessageDigest
  */
 fun readInput(name: String) = File("data", "$name.txt").readLines()
 
+fun readInputNoBlanks(name: String) = readInput(name).filter { it.isNotBlank() }
+
 /**
  * Converts string to md5 hash.
  */

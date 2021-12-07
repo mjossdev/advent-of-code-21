@@ -2,24 +2,22 @@ import kotlin.math.abs
 
 fun main() {
     fun part1(input: List<Int>): Int {
-        check(input.isNotEmpty())
-        val min = input.minOrNull()!!
-        val max = input.maxOrNull()!!
+        val min = input.min()
+        val max = input.max()
         val range = min..max
-        return range.minOfOrNull { pos -> input.sumOf { abs(it - pos) } }!!
+        return range.minOf { pos -> input.sumOf { abs(it - pos) } }
     }
     fun part2(input: List<Int>): Int {
-        check(input.isNotEmpty())
-        val min = input.minOrNull()!!
-        val max = input.maxOrNull()!!
+        val min = input.min()
+        val max = input.max()
         val range = min..max
-        return range.minOfOrNull { pos ->
+        return range.minOf { pos ->
             input.sumOf {
                 val n = abs(pos - it)
                 // Gauss Sum
                 (n * n + n) / 2
             }
-        }!!
+        }
     }
 
     val testInput = readInputAsInts("Day07_test")

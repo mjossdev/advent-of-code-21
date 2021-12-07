@@ -22,10 +22,8 @@ fun main() {
     fun part1(input: List<Int>): Long = countFish(input, 80)
     fun part2(input: List<Int>): Long = countFish(input, 256)
 
-    fun readFishes(name: String) = readInput(name).flatMap { l -> l.split(',').map { it.toInt() } }
-
-    val testInput = readFishes("Day06_test")
-    val input = readFishes("Day06")
+    val testInput = readInputAsInts("Day06_test")
+    val input = readInputAsInts("Day06")
 
     check(part1(testInput) == 5934L)
     println(part1(input))

@@ -10,6 +10,10 @@ fun readInput(name: String) = File("data", "$name.txt").readLines()
 
 fun readInputNoBlanks(name: String) = readInput(name).filter { it.isNotBlank() }
 
+fun readInputAsString(name: String) = File("data", "$name.txt").readText().trim()
+
+fun readInputAsInts(name: String, delimiter: String = ",") = readInputAsString(name).split(delimiter).map { it.toInt() }
+
 data class Point(val x: Int, val y: Int) {
     companion object {
         fun parse(s: String): Point {

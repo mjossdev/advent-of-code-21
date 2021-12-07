@@ -1,15 +1,15 @@
 import kotlin.math.abs
 
 fun main() {
-
-
     fun part1(input: List<Int>): Int {
+        check(input.isNotEmpty())
         val min = input.minOrNull()!!
         val max = input.maxOrNull()!!
         val range = min..max
         return range.minOfOrNull { pos -> input.sumOf { abs(it - pos) } }!!
     }
     fun part2(input: List<Int>): Int {
+        check(input.isNotEmpty())
         val min = input.minOrNull()!!
         val max = input.maxOrNull()!!
         val range = min..max

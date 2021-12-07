@@ -59,6 +59,8 @@ data class Line(val start: Point, val end: Point) {
 fun <T : Comparable<T>> Iterable<T>.min() = this.minOf { it }
 fun <T : Comparable<T>> Iterable<T>.max() = this.maxOf { it }
 
+fun Iterable<Int>.minMaxRange() = min()..max()
+
 /**
  * Converts string to md5 hash.
  */

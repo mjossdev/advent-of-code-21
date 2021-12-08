@@ -67,15 +67,16 @@ fun <T> Iterable<Set<T>>.unionAll(): Set<T> {
     return target
 }
 
-fun <T> Iterable<Set<T>>.intersectAll(): Set<T> {
-    val itr = iterator()
-    if (!itr.hasNext()) {
-        emptySet<T>()
+fun <T> Iterable<Set<T>>.intersectAll(): Set<T> = iterator().let {
+    if (it.hasNext()) {
+        val target = it.next().toMutableSet()
+        it.forEachRemaining { s -> target.retainAll(s) }
+        target
+    } else {
+        emptySet()
     }
-    val target = itr.next().toMutableSet()
-    itr.forEachRemaining { target.retainAll(it) }
-    return target
 }
+
 
 /**
  * Converts string to md5 hash.

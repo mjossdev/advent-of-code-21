@@ -4,8 +4,8 @@ private enum class Segment {
     TOP, TOP_LEFT, TOP_RIGHT, MIDDLE, BOTTOM_LEFT, BOTTOM_RIGHT, BOTTOM;
 
     companion object {
-        fun allExcept(vararg segment: Segment): Set<Segment> = EnumSet.allOf(Segment::class.java).apply {
-            removeAll(setOf(*segment))
+        fun allExcept(vararg segments: Segment): Set<Segment> = EnumSet.allOf(Segment::class.java).apply {
+            removeAll(segments.toSet())
         }
     }
 }

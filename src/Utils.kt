@@ -61,6 +61,22 @@ fun <T : Comparable<T>> Iterable<T>.max() = this.maxOf { it }
 
 fun Iterable<Int>.minMaxRange() = min()..max()
 
+fun <T> Iterable<Set<T>>.unionAll(): Set<T> {
+    val target = mutableSetOf<T>()
+    forEach { target.addAll(it) }
+    return target
+}
+
+fun <T> Iterable<Set<T>>.intersectAll(): Set<T> {
+    val itr = iterator()
+    if (!itr.hasNext()) {
+        emptySet<T>()
+    }
+    val target = itr.next().toMutableSet()
+    itr.forEachRemaining { target.retainAll(it) }
+    return target
+}
+
 /**
  * Converts string to md5 hash.
  */

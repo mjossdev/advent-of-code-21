@@ -1,11 +1,11 @@
-fun overlaps(lines: List<Line>, includeDiagonals: Boolean): Int = lines.asSequence()
-    .filter { includeDiagonals || !it.isDiagonal }
-    .flatMap { it.points() }
-    .groupingBy { it }
-    .eachCount()
-    .count { it.value > 1 }
-
 fun main() {
+    fun overlaps(lines: List<Line>, includeDiagonals: Boolean): Int = lines.asSequence()
+        .filter { includeDiagonals || !it.isDiagonal }
+        .flatMap { it.points() }
+        .groupingBy { it }
+        .eachCount()
+        .count { it.value > 1 }
+
     fun part1(input: List<Line>): Int = overlaps(input, false)
     fun part2(input: List<Line>): Int = overlaps(input, true)
 

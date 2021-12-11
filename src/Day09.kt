@@ -51,12 +51,8 @@ fun main() {
     fun part2(input: List<List<Int>>): Int =
         getBasins(input).asSequence().map { it.size }.sortedDescending().take(3).reduce(Int::times)
 
-    fun readHeightmap(name: String): List<List<Int>> = readInput(name).map { l ->
-        l.map { it.digitToInt() }
-    }
-
-    val testInput = readHeightmap("Day09_test")
-    val input = readHeightmap("Day09")
+    val testInput = readInputAsIntGrid("Day09_test")
+    val input = readInputAsIntGrid("Day09")
 
     check(part1(testInput) == 15)
     println(part1(input))

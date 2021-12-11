@@ -14,6 +14,8 @@ fun readInputAsString(name: String) = File("data", "$name.txt").readText().trim(
 
 fun readInputAsInts(name: String, delimiter: String = ",") = readInputAsString(name).split(delimiter).map { it.toInt() }
 
+fun readInputAsIntGrid(name: String) = readInput(name).map { l -> l.map { it.digitToInt() } }
+
 data class Point(val x: Int, val y: Int) {
     companion object {
         fun parse(s: String): Point {

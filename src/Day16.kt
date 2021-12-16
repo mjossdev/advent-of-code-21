@@ -39,14 +39,14 @@ fun main() {
 
     data class ParseResult(val packet: Packet, val rest: String)
 
-    fun createOperatorPacket(version: Int, subPackets: List<Packet>, packetTypeId: Int): Packet = when(packetTypeId) {
-        0 -> SumPacket(version, subPackets)
-        1 -> ProductPacket(version, subPackets)
-        2 -> MinPacket(version, subPackets)
-        3 -> MaxPacket(version, subPackets)
-        5 -> GreaterThanPacket(version, subPackets)
-        6 -> LessThanPacket(version, subPackets)
-        7 -> EqualToPacket(version, subPackets)
+    fun getConstructor(packetTypeId: Int): (Int, List<Packet>) -> Packet = when(packetTypeId) {
+        0 -> ::SumPacket
+        1 -> ::ProductPacket
+        2 -> ::MinPacket
+        3 -> ::MaxPacket
+        5 -> ::GreaterThanPacket
+        6 -> ::LessThanPacket
+        7 -> ::EqualToPacket
         else -> throw IllegalArgumentException("$packetTypeId is not an opeartor type ID")
     }
 
@@ -59,8 +59,7 @@ fun main() {
 
     fun parse(input: String): ParseResult {
         val version = input.substring(0, 3).toInt(2)
-        val packetType = input.substring(3, 6).toInt(2)
-        return when (packetType) {
+        return when (val packetTypeId = input.substring(3, 6).toInt(2)) {
             4 -> {
                 var i = 6
                 val value = buildString {
@@ -78,8 +77,8 @@ fun main() {
                 ParseResult(packet, rest)
             }
             else -> {
-                val lengthType = input[6].digitToInt(2)
-                when (lengthType) {
+                val constructor = getConstructor(packetTypeId)
+                when (val lengthType = input[6].digitToInt(2)) {
                     0 -> {
                         val subPacketsLength = input.substring(7, 22).toInt(2)
                         var remainingSubPackets = input.substring(22, 22 + subPacketsLength)
@@ -89,7 +88,7 @@ fun main() {
                             subPackets.add(packet)
                             remainingSubPackets = rest
                         }
-                        val packet = createOperatorPacket(version, subPackets, packetType)
+                        val packet = constructor(version, subPackets)
                         val rest = input.substringOrEmpty(22 + subPacketsLength)
                         ParseResult(packet, rest)
                     }
@@ -102,7 +101,7 @@ fun main() {
                             subPackets.add(result.packet)
                             rest = result.rest
                         }
-                        val packet = createOperatorPacket(version, subPackets, packetType)
+                        val packet = constructor(version, subPackets)
                         ParseResult(packet, rest)
                     }
                     else -> error("Unknown length type ID: $lengthType")

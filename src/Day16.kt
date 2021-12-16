@@ -59,53 +59,51 @@ fun main() {
 
     fun parse(input: String): ParseResult {
         val version = input.substring(0, 3).toInt(2)
-        return when (val packetTypeId = input.substring(3, 6).toInt(2)) {
-            4 -> {
-                var i = 6
-                val value = buildString {
-                    while (true) {
-                        val groupType = input[i].digitToInt(2)
-                        append(input.substring(i + 1, i + 5))
-                        i += 5
-                        if (groupType == 0) {
-                            break
-                        }
+        val packetTypeId = input.substring(3, 6).toInt(2)
+        return if (packetTypeId == 4) {
+            var i = 6
+            val value = buildString {
+                while (true) {
+                    val groupType = input[i].digitToInt(2)
+                    append(input.substring(i + 1, i + 5))
+                    i += 5
+                    if (groupType == 0) {
+                        break
                     }
-                }.toLong(2)
-                val packet = LiteralPacket(version, value)
-                val rest = input.substringOrEmpty(i)
-                ParseResult(packet, rest)
-            }
-            else -> {
-                val constructor = getConstructor(packetTypeId)
-                when (val lengthType = input[6].digitToInt(2)) {
-                    0 -> {
-                        val subPacketsLength = input.substring(7, 22).toInt(2)
-                        var remainingSubPackets = input.substring(22, 22 + subPacketsLength)
-                        val subPackets = mutableListOf<Packet>()
-                        while (remainingSubPackets.any { it == '1' }) {
-                            val (packet, rest) = parse(remainingSubPackets)
-                            subPackets.add(packet)
-                            remainingSubPackets = rest
-                        }
-                        val packet = constructor(version, subPackets)
-                        val rest = input.substringOrEmpty(22 + subPacketsLength)
-                        ParseResult(packet, rest)
-                    }
-                    1 -> {
-                        val numberOfSubPackets = input.substring(7, 18).toInt(2)
-                        var rest = input.substring(18)
-                        val subPackets = mutableListOf<Packet>()
-                        repeat(numberOfSubPackets) {
-                            val result = parse(rest)
-                            subPackets.add(result.packet)
-                            rest = result.rest
-                        }
-                        val packet = constructor(version, subPackets)
-                        ParseResult(packet, rest)
-                    }
-                    else -> error("Unknown length type ID: $lengthType")
                 }
+            }.toLong(2)
+            val packet = LiteralPacket(version, value)
+            val rest = input.substringOrEmpty(i)
+            ParseResult(packet, rest)
+        } else {
+            val constructor = getConstructor(packetTypeId)
+            when (val lengthType = input[6].digitToInt(2)) {
+                0 -> {
+                    val subPacketsLength = input.substring(7, 22).toInt(2)
+                    var remainingSubPackets = input.substring(22, 22 + subPacketsLength)
+                    val subPackets = mutableListOf<Packet>()
+                    while (remainingSubPackets.any { it == '1' }) {
+                        val (packet, rest) = parse(remainingSubPackets)
+                        subPackets.add(packet)
+                        remainingSubPackets = rest
+                    }
+                    val packet = constructor(version, subPackets)
+                    val rest = input.substringOrEmpty(22 + subPacketsLength)
+                    ParseResult(packet, rest)
+                }
+                1 -> {
+                    val numberOfSubPackets = input.substring(7, 18).toInt(2)
+                    var rest = input.substring(18)
+                    val subPackets = mutableListOf<Packet>()
+                    repeat(numberOfSubPackets) {
+                        val result = parse(rest)
+                        subPackets.add(result.packet)
+                        rest = result.rest
+                    }
+                    val packet = constructor(version, subPackets)
+                    ParseResult(packet, rest)
+                }
+                else -> error("Unknown length type ID: $lengthType")
             }
         }
     }

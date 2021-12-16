@@ -108,16 +108,15 @@ fun main() {
         }
     }
 
-    fun part1(input: String): Int {
-        val (packet) = parse(input)
+    fun part1(input: Packet): Int {
         var sum = 0
-        packet.visit { sum += it.version }
+        input.visit { sum += it.version }
         return sum
     }
 
-    fun part2(input: String): Long = parse(input).packet.value
+    fun part2(input: Packet): Long = input.value
 
-    fun readPuzzleInput (name: String) = readInputAsString(name).toBigInteger(16).toString(2)
+    fun readPuzzleInput (name: String) = parse(readInputAsString(name).toBigInteger(16).toString(2)).packet
 
     val testInput = readPuzzleInput("Day16_test")
     val input = readPuzzleInput("Day16")

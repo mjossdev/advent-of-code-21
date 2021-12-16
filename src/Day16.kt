@@ -47,7 +47,7 @@ fun main() {
         5 -> ::GreaterThanPacket
         6 -> ::LessThanPacket
         7 -> ::EqualToPacket
-        else -> throw IllegalArgumentException("$packetTypeId is not an opeartor type ID")
+        else -> throw IllegalArgumentException("$packetTypeId is not an operator type ID")
     }
 
     fun String.substringOrEmpty(start: Int) = if (start < length) substring(start) else ""

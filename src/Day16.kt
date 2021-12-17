@@ -50,8 +50,6 @@ fun main() {
         else -> throw IllegalArgumentException("$packetTypeId is not an operator type ID")
     }
 
-    fun String.substringOrEmpty(start: Int) = if (start < length) substring(start) else ""
-
     fun Packet.visit(action: (Packet) -> Unit) {
         action(this)
         subPackets.forEach { it.visit(action) }
@@ -63,17 +61,14 @@ fun main() {
         return if (packetTypeId == 4) {
             var i = 6
             val value = buildString {
-                while (true) {
+                do {
                     val groupType = input[i].digitToInt(2)
                     append(input.substring(i + 1, i + 5))
                     i += 5
-                    if (groupType == 0) {
-                        break
-                    }
-                }
+                } while (groupType == 1)
             }.toLong(2)
             val packet = LiteralPacket(version, value)
-            val rest = input.substringOrEmpty(i)
+            val rest = input.substring(i)
             ParseResult(packet, rest)
         } else {
             val constructor = getConstructor(packetTypeId)
@@ -82,13 +77,13 @@ fun main() {
                     val subPacketsLength = input.substring(7, 22).toInt(2)
                     var remainingSubPackets = input.substring(22, 22 + subPacketsLength)
                     val subPackets = mutableListOf<Packet>()
-                    while (remainingSubPackets.any { it == '1' }) {
+                    while (remainingSubPackets.isNotEmpty()) {
                         val (packet, rest) = parse(remainingSubPackets)
                         subPackets.add(packet)
                         remainingSubPackets = rest
                     }
                     val packet = constructor(version, subPackets)
-                    val rest = input.substringOrEmpty(22 + subPacketsLength)
+                    val rest = input.substring(22 + subPacketsLength)
                     ParseResult(packet, rest)
                 }
                 1 -> {

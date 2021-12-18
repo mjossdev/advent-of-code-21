@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
-
 plugins {
     kotlin("jvm") version "1.6.0"
 }
@@ -24,4 +22,8 @@ tasks {
     wrapper {
         gradleVersion = "7.3"
     }
+}
+
+dependencies {
+    implementation("com.google.code.gson:gson:2.8.9")
 }

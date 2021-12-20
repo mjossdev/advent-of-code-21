@@ -39,7 +39,7 @@ fun main() {
 
     data class ParseResult(val packet: Packet, val rest: String)
 
-    fun getConstructor(packetTypeId: Int): (Int, List<Packet>) -> Packet = when(packetTypeId) {
+    fun getConstructor(packetTypeId: Int): (Int, List<Packet>) -> Packet = when (packetTypeId) {
         0 -> ::SumPacket
         1 -> ::ProductPacket
         2 -> ::MinPacket
@@ -76,11 +76,12 @@ fun main() {
                 0 -> {
                     val subPacketsLength = input.substring(7, 22).toInt(2)
                     var remainingSubPackets = input.substring(22, 22 + subPacketsLength)
-                    val subPackets = mutableListOf<Packet>()
-                    while (remainingSubPackets.isNotEmpty()) {
-                        val (packet, rest) = parse(remainingSubPackets)
-                        subPackets.add(packet)
-                        remainingSubPackets = rest
+                    val subPackets = buildList {
+                        while (remainingSubPackets.isNotEmpty()) {
+                            val (packet, rest) = parse(remainingSubPackets)
+                            add(packet)
+                            remainingSubPackets = rest
+                        }
                     }
                     val packet = constructor(version, subPackets)
                     val rest = input.substring(22 + subPacketsLength)
@@ -89,11 +90,12 @@ fun main() {
                 1 -> {
                     val numberOfSubPackets = input.substring(7, 18).toInt(2)
                     var rest = input.substring(18)
-                    val subPackets = mutableListOf<Packet>()
-                    repeat(numberOfSubPackets) {
-                        val result = parse(rest)
-                        subPackets.add(result.packet)
-                        rest = result.rest
+                    val subPackets = buildList {
+                        repeat(numberOfSubPackets) {
+                            val result = parse(rest)
+                            add(result.packet)
+                            rest = result.rest
+                        }
                     }
                     val packet = constructor(version, subPackets)
                     ParseResult(packet, rest)
@@ -111,7 +113,7 @@ fun main() {
 
     fun part2(input: Packet): Long = input.value
 
-    fun readPuzzleInput (name: String) = parse(readInputAsString(name).toBigInteger(16).toString(2)).packet
+    fun readPuzzleInput(name: String) = parse(readInputAsString(name).toBigInteger(16).toString(2)).packet
 
     val testInput = readPuzzleInput("Day16_test")
     val input = readPuzzleInput("Day16")

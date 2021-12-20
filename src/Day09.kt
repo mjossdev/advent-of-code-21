@@ -3,19 +3,17 @@ fun main() {
 
     operator fun <T> List<List<T>>.get(coordinate: Coordinate): T = this[coordinate.row][coordinate.col]
 
-    fun getLowPoints(heightmap: List<List<Int>>): List<Coordinate> {
-        val lowPoints = mutableListOf<Coordinate>()
+    fun getLowPoints(heightmap: List<List<Int>>): List<Coordinate> = buildList {
         heightmap.forEachIndexed { rowIndex, row ->
             row.forEachIndexed { colIndex, height ->
                 val rowRange = rowIndex - 1..rowIndex + 1 step 2
                 val colRange = colIndex - 1..colIndex + 1 step 2
                 if (colRange.all { height < row.getOrElse(it) { 10 } } &&
                     rowRange.all { height < (heightmap.getOrNull(it)?.getOrNull(colIndex) ?: (10)) }) {
-                    lowPoints.add(Coordinate(rowIndex, colIndex))
+                    add(Coordinate(rowIndex, colIndex))
                 }
             }
         }
-        return lowPoints
     }
 
     fun collectBasin(heightmap: List<List<Int>>, coordinate: Coordinate, target: MutableSet<Coordinate>) {

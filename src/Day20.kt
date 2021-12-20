@@ -15,7 +15,7 @@ fun main() {
         private val storage = mutableListOf<T>()
 
         init {
-            while (storage.size < rows * cols) {
+            repeat(rows * cols) {
                 storage.add(default)
             }
         }
